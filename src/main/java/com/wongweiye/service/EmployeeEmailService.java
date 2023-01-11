@@ -12,9 +12,16 @@ public interface EmployeeEmailService {
     public Employee createEmployee(Employee employee);
     public Optional<Employee> updateEmployee(long employeeId, Employee employee);
 
+    public List<Employee> findEmployees(String name);
+
     public Optional<Address> updateAddress(long addressId, long employeeId, Address address);
 
     public Optional<Email> updateEmailAndAddress(long addressId, long emailId, Email address);
 
     public List<Email> checkEmail(long employeeId);
+
+    public List<Employee> checkEmailType(String type);
+
+    public List<Email> checkEmailWithIdAndType(long id, String type);
+
 }

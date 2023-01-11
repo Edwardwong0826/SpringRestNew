@@ -93,5 +93,23 @@ public class EmployeeEmailController {
 
     }
 
+    @GetMapping(path="/find/employee/{name}")
+    public ResponseEntity<List<Employee>> checkEmployeeByName(@PathVariable String name){
+        List<Employee> employees = employeeEmailService.findEmployees(name);
+
+        return ResponseEntity.ok().body(employees);
+    }
+
+    @GetMapping(path="/check/by/email/type")
+    public ResponseEntity<List<Employee>> checkEmployeeByEmailType(@RequestParam String emailType){
+        List<Employee> employees = employeeEmailService.checkEmailType(emailType);
+        return ResponseEntity.ok().body(employees);
+    }
+
+    @GetMapping(path="/check/by/email/idAndType")
+    public ResponseEntity<List<Email>> checkEmployeeByEmailIdAndType(@RequestParam long emailId , @RequestParam String emailType){
+        List<Email> emails = employeeEmailService.checkEmailWithIdAndType(emailId, emailType);
+        return ResponseEntity.ok().body(emails);
+    }
 
 }

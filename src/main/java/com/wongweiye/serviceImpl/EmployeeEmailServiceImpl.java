@@ -62,6 +62,13 @@ public class EmployeeEmailServiceImpl implements EmployeeEmailService {
     }
 
     @Override
+    public List<Employee> findEmployees(String name) {
+
+        List<Employee> byName = employeeRepository.findByName(name);
+        return byName;
+    }
+
+    @Override
     public Optional<Address> updateAddress(long addressId, long employeeId, Address address) {
 
         return addressRepository.findById(addressId).map( addr ->{
@@ -90,6 +97,18 @@ public class EmployeeEmailServiceImpl implements EmployeeEmailService {
         Optional<Employee> byId = employeeRepository.findById(employeeId);
 
         return byId.get().getEmails();
+    }
+
+    public List<Employee> checkEmailType(String emailType) {
+        List<Employee> byEmailType = employeeRepository.getEmployeeByType(emailType);
+
+        return byEmailType;
+    }
+
+    @Override
+    public List<Email> checkEmailWithIdAndType(long id, String type) {
+        List<Email> emailByIdAndType = employeeRepository.getEmailByIdAndType(id, type);
+        return emailByIdAndType;
     }
 
 
