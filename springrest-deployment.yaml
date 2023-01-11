@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-rest-new
+  namespace: default
+  labels:
+    app: spring-rest-new
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-rest-new
+  template:
+    metadata:
+      labels:
+        app: spring-rest-new
+    spec:
+      containers:
+        - name: spring-rest-new
+          image: exrvoexmoon/spring-rest-new-0.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-configmap
+                  key: database_url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: mysql-user-username
+                  name: mysql-secret
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: mysql-user-password
+                  name: mysql-secret
