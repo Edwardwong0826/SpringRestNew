@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+
+// one-to-one associations are only rarely used in relational table models, the attribute defined on entity that maps
+// the database table contains foreign key column owns the association
+
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -23,6 +28,8 @@ public class Employee {
     @Column(name = "name")
     private String name;
 
+    // we should avoid to use unidirectional one-to-many associations
+    // Many-to-Many association default fetch type was the FetchType.LAZY
     @OneToMany(mappedBy="employee", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Email> emails = new ArrayList<>();
