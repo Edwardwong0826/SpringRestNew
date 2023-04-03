@@ -3,6 +3,8 @@ server:
 spring:
   profiles:
     active: dev
+  jpa:
+    hibernate.ddl-auto: update
 env:
   - name: MYSQL_DATABASE
     value: springdemo
@@ -12,6 +14,12 @@ env:
     value: 61376554
   - name: MYSQL_ROOT_PASSWORD
     value: 61376554
+
+springRestJWT:
+  app:
+    jwtSecret: SpringRestSecretKey
+    jwtExpirationMs: 86400000
+
 
 #debug: true
 ---
