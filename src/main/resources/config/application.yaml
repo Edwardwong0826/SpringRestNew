@@ -42,19 +42,19 @@ logging:
 
 ---
 server:
-  port: 8082
+  port: 8081
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/springdemo?useTimezone=true&serverTimezone=UTC
-    username: root
+    url: jdbc:mysql://springdemo.cairqwqbf3oy.ap-southeast-1.rds.amazonaws.com:3306/springdemo?useTimezone=true&serverTimezone=UTC
+    username: admin
     password: 61376554
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  profiles: test
+  profiles: dev2
 
 ---
 server:
@@ -71,7 +71,7 @@ spring:
       path: /h2
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-  profiles: dev2
+  profiles: dev3
 #  spring.datasource.url=jdbc:mysql://localhost:3306/demo?useTimezone=true&serverTimezone=UTC
 #  spring.datasource.username=root
 #  spring.datasource.password=destiny61376554
