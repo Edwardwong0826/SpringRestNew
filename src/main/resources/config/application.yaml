@@ -9,7 +9,7 @@ env:
   - name: MYSQL_DATABASE
     value: springdemo
   - name: MYSQL_USER
-    value: root
+    value: admin
   - name: MYSQL_PASSWORD
     value: 61376554
   - name: MYSQL_ROOT_PASSWORD

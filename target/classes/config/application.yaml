@@ -2,14 +2,14 @@ server:
   port: 8080
 spring:
   profiles:
-    active: dev
+    active: dev2
   jpa:
     hibernate.ddl-auto: update
 env:
   - name: MYSQL_DATABASE
     value: springdemo
   - name: MYSQL_USER
-    value: root
+    value: admin
   - name: MYSQL_PASSWORD
     value: 61376554
   - name: MYSQL_ROOT_PASSWORD
@@ -42,21 +42,36 @@ logging:
 
 ---
 server:
-  port: 8082
+  port: 8081
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type: TRACE
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/springdemo?useTimezone=true&serverTimezone=UTC
-    username: root
+    url: jdbc:mysql://springdemo.cairqwqbf3oy.ap-southeast-1.rds.amazonaws.com:3306/springdemo?useTimezone=true&serverTimezone=UTC
+    username: admin
     password: 61376554
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  profiles: test
+  profiles: dev2
 
-
+---
+server:
+  port: 8083
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;
+    username: sa
+    password: 123456
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  profiles: dev3
 #  spring.datasource.url=jdbc:mysql://localhost:3306/demo?useTimezone=true&serverTimezone=UTC
 #  spring.datasource.username=root
 #  spring.datasource.password=destiny61376554
