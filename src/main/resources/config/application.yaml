@@ -20,6 +20,16 @@ springRestJWT:
     jwtSecret: SpringRestSecretKey
     jwtExpirationMs: 86400000
 
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
 
 #debug: true
 ---
