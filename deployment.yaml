@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: spring-test-app
-  replicas: 3 # Number of replicas that will be created for this deployment
+  replicas: 2 # Number of replicas that will be created for this deployment
   strategy:
     type: RollingUpdate #rolling update is the default strategy
     rollingUpdate:
@@ -33,13 +33,13 @@ spec:
 #              host: localhost
           # with spring security, curl in pod return 401 unauthorized, related to security token, need to go security web configure
           # the probe works in docker desktop context TCP type only
-          readinessProbe:
-            initialDelaySeconds: 10
-            periodSeconds: 3
-#            httpGet:
-#              #scheme: HTTP
-#              path: /actuator/health/readiness
+#          readinessProbe:
+#            initialDelaySeconds: 10
+#            periodSeconds: 3
+##            httpGet:
+##              #scheme: HTTP
+##              path: /actuator/health/readiness
+##              port: 8081
+##              #host: localhost
+#            tcpSocket:
 #              port: 8081
-#              #host: localhost
-            tcpSocket:
-              port: 8081
