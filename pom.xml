@@ -85,6 +85,15 @@
 			<version>2.7.10</version>
 		</dependency>
 
+		<!-- use by the @Indexed annotation in the main application class-->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context-indexer -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-indexer</artifactId>
+			<scope>true</scope>
+		</dependency>
+
+
 
 	</dependencies>
 
