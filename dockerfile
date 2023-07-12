@@ -1,4 +1,4 @@
 FROM openjdk:17-jdk-alpine3.14
 EXPOSE 8081
-ADD SpringRestNew-0.0.1-SNAPSHOT.jar SpringRestNew-0.0.1.jar
+ADD /var/jenkins_home/.m2/repository/com/wongweiye/SpringRestNew/0.0.1-SNAPSHOT/SpringRestNew-0.0.1-SNAPSHOT.jar SpringRestNew-0.0.1.jar
 ENTRYPOINT ["java","-jar","/SpringRestNew-0.0.1.jar"]
