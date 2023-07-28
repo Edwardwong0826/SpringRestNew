@@ -10,10 +10,14 @@ spec:
     - host: public.service-a.com
       http:
         paths:
-          - path: #/path-a
+          - path: / #/path-a
             pathType: Prefix
             backend:
               service:
                 name: spring-test-service
                 port:
                   number: 8081
+    # Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster
+    # Traffic routing is controlled by rules defined on the Ingress resource
+    # once we deploy the ingress, we can use the host to access by using local windows hosts file defined the domain
+    # http://public.service-a.com:8081/v1/configurations/onboardStatusAfterCheckIn
