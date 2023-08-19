@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment # Kubernetes resource kind we are creating
+metadata:
+  name: spring-test-app
+spec:
+  selector:
+    matchLabels:
+      app: spring-test-app
+  replicas: 2 # Number of replicas that will be created for this deployment
+  template:
+    metadata:
+      labels:
+        app: spring-test-app
+    spec:
+      containers:
+        - name: spring-test-app
+          image: exrvoexmoon/spring-rest-new-0.0.1 # Image that will be used to containers in the cluster
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082 # The port that the container is running on in the cluster

@@ -4,7 +4,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class copyPropertiesUtil {
+public class CopyPropertiesUtil {
 
     public void convertFromSourceToTarget(Object source, Object target) throws InvocationTargetException, IllegalAccessException {
 
