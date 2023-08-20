@@ -1,4 +1,4 @@
-package com.wongweiye.security.service;
+package com.wongweiye.security.config.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wongweiye.model.User;

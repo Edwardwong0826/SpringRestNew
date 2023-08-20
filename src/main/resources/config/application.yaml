@@ -31,6 +31,9 @@ management:
     readinessState:
       enabled: true
 
+rsa:
+  private-key: classpath:certs/private.pem
+  public-key: classpath:certs/public.pem
 #debug: true
 ---
 # yaml format xxx: xxxx

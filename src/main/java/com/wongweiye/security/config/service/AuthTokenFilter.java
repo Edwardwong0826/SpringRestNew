@@ -1,4 +1,4 @@
-package com.wongweiye.security.service;
+package com.wongweiye.security.config.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

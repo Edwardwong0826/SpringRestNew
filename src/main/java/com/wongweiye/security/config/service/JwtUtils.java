@@ -1,4 +1,4 @@
-package com.wongweiye.security.service;
+package com.wongweiye.security.config.service;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
