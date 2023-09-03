@@ -15,7 +15,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-
+    // UserDetailsService is the interface that do the user source authentication by spring security
+    // in our case, we create the username and password stored into database table, so we create our own class
+    // to implement and override UserDetailsService loadUserByUsername method to return userDetails, therefore AuthenticationProvider
+    // will choose our class to get the username instead of use default InMemoryUserDetailsManager to get
+    // UserDetailsServiceAutoConfiguration will decide by spring boot auto configure which implementation to use in spring security
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

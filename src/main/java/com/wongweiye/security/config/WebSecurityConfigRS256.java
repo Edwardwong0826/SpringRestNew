@@ -97,6 +97,11 @@ public class WebSecurityConfigRS256 {
     //        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     //    }
 
+    // spring security use servlet filter to achieve authentication/authorization
+    // spring uses delegatingFilterProxy to bridge spring to java web servlet in filter chain
+    // delegatingFilterProxy use FilterChainProxy to manage 0-n securityFilterChain, so we can configure our own securityFilterChain
+    // in spring security 5.8.x, security filter chain will load default filters which is 12
+    // these filters like BearerTokenAuthenticationFilter, SecurityContextPersistenceFilter etc
     // until this point, if we want to access any of the endpoint on browser, it will prompt login dialog and required username and password to authenticate
     // when set OAuth2ResourceServerConfigurer configure option to jwt(Customizer), we need to either supply a Jwk Set Uri, Jwk decoder instance or JwtDecoder bean
     @Bean

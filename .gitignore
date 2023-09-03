@@ -1,4 +1,7 @@
-
+target/classes/certs/public.pem
+target/classes/META-INF/spring.components
+target/classes/config/application.yaml
+SpringRestNew.iml
 *.class
 *.lst
 *.sql
@@ -7,4 +10,9 @@
 *.txt
 *.original
 *.jar
-target/classes/config/application.yaml
+*.pem
+*.json
+*.dump
+
+
+

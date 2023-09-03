@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtUtils {
-
+    // for WebSecurityConfigRS256
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${springRestJWT.app.jwtExpirationMs}")
@@ -97,7 +97,7 @@ public class JwtUtils {
         return false;
     }
 
-// ---------------for WebSecurityConfigHS256--------------------------------------------
+ //---------------for WebSecurityConfigHS256--------------------------------------------
 //    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 //
 //    @Value("${springRestJWT.app.jwtSecret}")
