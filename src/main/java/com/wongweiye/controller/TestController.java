@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test")
 public class TestController {
+
+    // spring security provide two ways to do access control
+    // based on filter, http request before reach method to do verify - FilterSecurityInterceptor
+    // based on AOP - MethodSecurityInterceptor
     @GetMapping("/all")
     public String allAccess() {
         return "Public Content.";

@@ -45,6 +45,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    // we are using our own data source way to authenticate
     // SecurityContextHolder will store authentication object, it was used to retrieve after login user information
     // spring security will store user information to session, by using ThreadLocal to store, so that only current
     // request thread can access the user information
@@ -57,9 +58,20 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
+        // AuthenticationManager is only one that will do authenticate, it requires Authentication and if success it will return complete Authentication else failed will return null or others
+        // default implementation of AuthenticationManager is ProviderManager
+        // Authentication instance will contain information like Principal(user information), Authorities(permission),
+        // Credentials(password, secret etc. but this info will erase by spring security therefore we can't get )
+        // UsernamePasswordAuthenticationToken is a AbstractAuthenticationToken and is inherited Authentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
+        // SecurityContextHolder use Strategy to determine which context to use
+        // ThreadLocalSecurityContextHolderStrategy - for current thread to use only
+        // InheritableThreadLocalSecurityContextHolderStrategy - for current thread and its child thread to use as well
+        // GlobalSecurityContextHolderStrategy - save the data into static variable, rarely use
+        // SecurityContext interface got two methods - getAuthentication and setAuthentication
+        // when we use our way and success authenticate, then we use setAuthentication pass Authentication to securityContext to indicate spring security that is authenticated already
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 

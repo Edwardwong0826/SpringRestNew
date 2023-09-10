@@ -8,8 +8,6 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.wongweiye.security.RSAKeyProperties;
-import com.wongweiye.security.config.service.AuthTokenFilter;
-import com.wongweiye.security.config.service.AuthEntryPointJwt;
 import com.wongweiye.security.config.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -63,20 +62,45 @@ public class WebSecurityConfigRS256 {
     @Autowired
     private RSAKeyProperties rsaKeyProperties;
 
+    // in spring security > 5.8, 默认AuthenticationManager 全局配置还是有效, but if we want to define custom Authentication Provider, we can create our class to implements AuthenticationProvider interface
+
+    //    @Autowired
+    //    private CustomXXXAuthenticationProvider customXXXAuthenticationProvider;
+
+    //    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+    //        AuthenticationManagerBuilder authenticationManagerBuilder =
+    //                http.getSharedObject(AuthenticationManagerBuilder.class);
+    //        authenticationManagerBuilder.authenticationProvider(customXXXAuthenticationProvider);
+    //        authenticationManagerBuilder.authenticationProvider(authProvider());
+    //
+    //        return authenticationManagerBuilder.build();
+    //    }
+
     public WebSecurityConfigRS256(RSAKeyProperties rsaKeyProperties) {
         this.rsaKeyProperties = rsaKeyProperties;
     }
 
-// Spring official not recommend this approach
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-//
-//        return authConfig.getAuthenticationManager();
-//    }
+    // Spring official not recommend this approach
+    //    @Bean
+    //    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    //
+    //        return authConfig.getAuthenticationManager();
+    //    }
 
-    // authentication is done by AuthenticationManager
-    // its concrete class was primary ProviderManager, ProviderManager manage many AuthenticationProvider instance, Spring security allows multiple AuthenticationProvider exist
-    // to achieve many types of authenticate method,
+
+    // in spring security, system support simultaneous multiple different way of authenticate, different authenticate way correspond different AuthenticationProvider
+    // so a complete flow might supply by different AuthenticationProvider, ProviderManager stored a list of AuthenticationProvider, it will iterate every AuthenticationProvider
+    // to execute identity authenticate, as long as ony of one AuthenticationProvider return authentication result object with authenticated equal true
+
+    // normally ProviderManager can set one AuthenticationManager(normally is providerManager), because there is possible of many ProviderManager, they will share one parent
+    // sometimes when application like resources /api/text we can set it to use first ProviderManager, second resources /api/test we set it use second ProviderManager, rest of resources uri then will default let parent to do authenticate
+    // when child ProviderManager authenticate not success, it will still able to look back parent to do authenticate, parent is normally is created by spring security
+    // parent AuthenticationManager is kind of like global resource as the backup of all AuthenticationManager(ProviderManager)
+    // and by default parent AuthenticationManager(ProviderManager) will have DaoAuthenticationProvider
+
+    // AuthenticationManager - is the authentication manager in spring security concept, it defined spring security filter execute authenticate operation
+    // ProviderManager - AuthenticationManager implementation class, spring security when authenticate default use this
+    // AuthenticationProvider - can be DaoAuthenticationProvider or JwtAuthenticationProvider, this provider we can inject according different type of authenticate method
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -109,15 +133,18 @@ public class WebSecurityConfigRS256 {
 
         http.cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                //.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .oauth2ResourceServer(x -> x.jwt()) // lambda style same as above line
                 //.oauth2ResourceServer(configure -> configure.jwt(Customizer.withDefaults()))
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .antMatchers("/actuator/health/**").permitAll()
                 .anyRequest().authenticated();
+                //.anyRequest().authenticated().and().oauth2Login();
 
         http.csrf().disable();
+
         return http.build();
     }
 
@@ -130,7 +157,7 @@ public class WebSecurityConfigRS256 {
         // so we need to configure JwtGrantedAuthoritiesConverter setAuthorityPrefix to "", then will map claims value to SimpleGrantedAuthority as ROLE_XXX instead of SCOPE_ROLE_XXX
         // GrantedAuthority will decide which protected resource we can access or not
 
-        // either we do in this way or we can create our own CustomJwtConverter to do mapping by ourself like
+        // either we do in this way or we can create our own CustomJwtConverter to do mapping by ourselves like
         // JwtAuthenticationProvider.setJwtAuthenticationConverter(new xxxCustomJwtConverter())
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         grantedAuthoritiesConverter.setAuthorityPrefix("");
@@ -152,7 +179,8 @@ public class WebSecurityConfigRS256 {
 
     @Bean
     JwtDecoder jwtDecoder() throws JOSEException {
-        // use this as our JwtDecoder by using the public we set in configuration class to build and return
+        // use this as our JwtDecoder by using the public key we set in configuration class to build and return
+        // also this JwtDecoder bean for this oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
         return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
     }
 
