@@ -131,6 +131,16 @@ public class WebSecurityConfigRS256 {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        // in this application we are based on AOP - MethodSecurityInterceptor to manage access control
+        // difference between method and filter way is that FilterSecurityInterceptor will do pre process before request,
+        // MethodSecurityInterceptor will do pre process and post process within request which is AROUND in AOP
+        // based on filter can refer to below example
+        // .antMatchers("/h2/**").hasRole("USER").permitAll()
+        // in newer version >= 5.8 .authorizeRequests().antMatchers change to use .authorizeHttpRequests().requestMatchers(xxx)
+
+        // in spring security version >= 5.8, it replaces FilterSecurityInterceptor with AuthorizationFilter
+        // Authorize HttpServletRequests with AuthorizationFilter - https://docs.spring.io/spring-security/reference/5.8/servlet/authorization/authorize-requests.html
+        // Authorize HttpServletRequest with FilterSecurityInterceptor - https://docs.spring.io/spring-security/reference/5.8/servlet/authorization/authorize-http-requests.html
         http.cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 //.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
@@ -140,6 +150,7 @@ public class WebSecurityConfigRS256 {
                 .antMatchers("/api/test/**").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .antMatchers("/actuator/health/**").permitAll()
+
                 .anyRequest().authenticated();
                 //.anyRequest().authenticated().and().oauth2Login();
 
@@ -151,16 +162,18 @@ public class WebSecurityConfigRS256 {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
 
-        // In JwtAuthenticationProvider authenticate method, inside it will use JwtAuthenticationConverter to extract authorities using extractAuthorities method
-        // jwtGrantedAuthoritiesConverter.convert(jwt) to convert JWT to AbstractAuthenticationToken we used to return for authenticated,
+        // Before hit request/method endpoints In JwtAuthenticationProvider authenticate method, inside it will use JwtAuthenticationConverter.convert(jwt)
+        // to extract authorities from JWT to construct JwtAuthenticationToken and return as AbstractAuthenticationToken we used to return for authenticated,
         // by default it will look for JWT claims name scope or scp, and mapped that claims value like this format prefix SCOPE_ + claims value which will causing error for 403
+        // due to method haven't @PreAuthorize("hasAuthority('SCOPE_xxx')"), in RBDC(role based data access) design, we will insert ROLE_xxx into roles table
         // so we need to configure JwtGrantedAuthoritiesConverter setAuthorityPrefix to "", then will map claims value to SimpleGrantedAuthority as ROLE_XXX instead of SCOPE_ROLE_XXX
         // GrantedAuthority will decide which protected resource we can access or not
 
         // either we do in this way or we can create our own CustomJwtConverter to do mapping by ourselves like
         // JwtAuthenticationProvider.setJwtAuthenticationConverter(new xxxCustomJwtConverter())
         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        // commented out below when we have added the @PreAuthorize("hasAuthority('SCOPE_xxx')") on the endpoints
+        //grantedAuthoritiesConverter.setAuthorityPrefix("");
 
         JwtAuthenticationConverter authConverter = new JwtAuthenticationConverter();
         authConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

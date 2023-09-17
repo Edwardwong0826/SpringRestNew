@@ -61,8 +61,13 @@ public class AuthController {
         // AuthenticationManager is only one that will do authenticate, it requires Authentication and if success it will return complete Authentication else failed will return null or others
         // default implementation of AuthenticationManager is ProviderManager
         // Authentication instance will contain information like Principal(user information), Authorities(permission),
-        // Credentials(password, secret etc. but this info will erase by spring security therefore we can't get )
+        // Credentials(password, secret etc. but this Credentials info will erase by spring security therefore we can't get
         // UsernamePasswordAuthenticationToken is a AbstractAuthenticationToken and is inherited Authentication
+
+        // There is GrantedAuthority Collection stored login user permission info
+        // Spring Security provide two policy to manage access control
+        // 1 based on filter way - FilterSecurityInterceptor, before http request reach method
+        // 2 based on AOP way - MethodSecurityInterceptor, after http request invoke method
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 

@@ -60,14 +60,16 @@ public class JwtUtils {
 //
 //        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-
+        // https://www.baeldung.com/spring-security-map-authorities-jwt - Map Authorities from JWT, we set up custom claim,
+        // depends on the Oauth2.0 authorization servers will return what claims/scopes
+        // we can create own JwtGrantedAuthoritiesConverter class to defined any prefix we want and inject it into JwtAuthorizationConverter
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
-                .claim("scope",scope)
+                .claim("scp",scope) // claim name to set scp or scope, both is the same
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.RS256, rsaKeyProperties.privateKey())
