@@ -7,7 +7,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.wongweiye.security.RSAKeyProperties;
+import com.wongweiye.security.Jwks;
+//import com.wongweiye.security.RSAKeyProperties;
 import com.wongweiye.security.config.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -59,8 +60,17 @@ public class WebSecurityConfigRS256 {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private RSAKeyProperties rsaKeyProperties;
+    //@Autowired
+    //private RSAKeyProperties rsaKeyProperties;
+
+    // no need to put @Autowired on field injection or constructor injection else will throw
+    // Consider defining a bean of type 'com.nimbusds.jose.jwk.RSAKey' in your configuration.
+    private RSAKey rsaKey;
+
+//    public WebSecurityConfigRS256(RSAKeyProperties rsaKeyProperties) {
+//        this.rsaKeyProperties = rsaKeyProperties;
+//    }
+
 
     // in spring security > 5.8, 默认AuthenticationManager 全局配置还是有效, but if we want to define custom Authentication Provider, we can create our class to implements AuthenticationProvider interface
 
@@ -75,10 +85,6 @@ public class WebSecurityConfigRS256 {
     //
     //        return authenticationManagerBuilder.build();
     //    }
-
-    public WebSecurityConfigRS256(RSAKeyProperties rsaKeyProperties) {
-        this.rsaKeyProperties = rsaKeyProperties;
-    }
 
     // Spring official not recommend this approach
     //    @Bean
@@ -180,12 +186,19 @@ public class WebSecurityConfigRS256 {
         return authConverter;
     }
 
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() {
+        rsaKey = Jwks.generateRsa();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
     // we are using asymmetric key to encrypted and decrypted, here we are using RS256 algorithm to sign the JWT, the current JWA recommend algorithm for generate JWT
     // https://codecurated.com/blog/introduction-to-jwt-jws-jwe-jwa-jwk/
     @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+    JwtEncoder jwtEncoder(JWKSource<SecurityContext> jwks) {
+        //JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build();
+        //JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
 
@@ -194,7 +207,7 @@ public class WebSecurityConfigRS256 {
     JwtDecoder jwtDecoder() throws JOSEException {
         // use this as our JwtDecoder by using the public key we set in configuration class to build and return
         // also this JwtDecoder bean for this oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-        return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
+        return NimbusJwtDecoder.withPublicKey(rsaKey.toRSAPublicKey()).build();
     }
 
 }

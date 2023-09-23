@@ -31,9 +31,11 @@ management:
     readinessState:
       enabled: true
 
-rsa:
-  private-key: classpath:certs/private.pem
-  public-key: classpath:certs/public.pem
+# comment this due to this project using auto generated RSA public key and private key using Jwks and KeyGeneratorUtils class
+# only uncomment this when want to use manual generate public and private ley
+#rsa:
+#  public-key: classpath:certs/public.pem
+#  private-key: classpath:certs/private.pem
 #debug: true
 ---
 # yaml format xxx: xxxx

@@ -29,11 +29,15 @@ public class JwtUtils {
 
     private final JwtEncoder jwtEncoder;
 
-    private RSAKeyProperties rsaKeyProperties;
+    //private RSAKeyProperties rsaKeyProperties;
 
-    public JwtUtils(JwtEncoder jwtEncoder, RSAKeyProperties rsaKeyProperties) {
+//    public JwtUtils(JwtEncoder jwtEncoder, RSAKeyProperties rsaKeyProperties) {
+//        this.jwtEncoder = jwtEncoder;
+//        this.rsaKeyProperties = rsaKeyProperties;
+//    }
+
+    public JwtUtils(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
-        this.rsaKeyProperties = rsaKeyProperties;
     }
 
     //now RS256 Algorithm throw Base64-encoded key bytes may only be specified for HMAC signatures.  If using RSA or Elliptic Curve, use the signWith(SignatureAlgorithm, Key) method instead.
@@ -41,48 +45,50 @@ public class JwtUtils {
     //RS256 is Asymmetric, use two key, public key and private key on both side
     //HS512 is Symmetric, use one secret on both side
     public String generateJwtToken(Authentication authentication) {
-
-        // Below both method can generate token as mostly same, just choose the one we want to use
-//        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-//
-//        Instant now = Instant.now();
-//        String scope = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(" "));
-//        JwtClaimsSet claims = JwtClaimsSet.builder()
-//                .issuer("self")
-//                .issuedAt(now)
-//                .expiresAt(now.plus(1, ChronoUnit.HOURS))
-//                .subject(userPrincipal.getUsername())
-//                .claim("scope", scope)
-//                .claim("role", scope)
-//                .build();
-//
-//        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
         // https://www.baeldung.com/spring-security-map-authorities-jwt - Map Authorities from JWT, we set up custom claim,
         // depends on the Oauth2.0 authorization servers will return what claims/scopes
         // we can create own JwtGrantedAuthoritiesConverter class to defined any prefix we want and inject it into JwtAuthorizationConverter
+
+        // Below both method can generate token as mostly same, just choose the one we want to use
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
+        Instant now = Instant.now();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
-        return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
-                .claim("scp",scope) // claim name to set scp or scope, both is the same
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.RS256, rsaKeyProperties.privateKey())
-                .compact();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .subject(userPrincipal.getUsername())
+                .claim("scope", scope)
+                .claim("role", scope)
+                .build();
+
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+
+//        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+//        String scope = authentication.getAuthorities().stream()
+//                .map(GrantedAuthority::getAuthority)
+//                .collect(Collectors.joining(" "));
+//        return Jwts.builder()
+//                .setSubject((userPrincipal.getUsername()))
+//                .claim("scp",scope) // claim name to set scp or scope, both is the same
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+//                .signWith(SignatureAlgorithm.RS256, rsaKeyProperties.privateKey())
+//                .compact();
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(rsaKeyProperties.publicKey()).parseClaimsJws(token).getBody().getSubject();
+        //return Jwts.parser().setSigningKey(rsaKeyProperties.publicKey()).parseClaimsJws(token).getBody().getSubject();
+        return null;
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(rsaKeyProperties.publicKey()).parseClaimsJws(authToken);
+            //Jwts.parser().setSigningKey(rsaKeyProperties.publicKey()).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
