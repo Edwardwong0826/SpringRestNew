@@ -107,6 +107,9 @@ public class WebSecurityConfigRS256 {
     // AuthenticationManager - is the authentication manager in spring security concept, it defined spring security filter execute authenticate operation
     // ProviderManager - AuthenticationManager implementation class, spring security when authenticate default use this
     // AuthenticationProvider - can be DaoAuthenticationProvider or JwtAuthenticationProvider, this provider we can inject according different type of authenticate method
+
+    // when run Auth Controller endpoints without bearer token, it will invoke DaoAuthenticationProvider
+    // run rest of the Controller endpoints with bearer token, it will invoke JwtAuthenticationProvider
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -116,6 +119,7 @@ public class WebSecurityConfigRS256 {
     }
 
     // Encode means encrypt the password to the format we wanted, here we choose BCrypt
+    // refer https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html#authentication-password-storage-dpe
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

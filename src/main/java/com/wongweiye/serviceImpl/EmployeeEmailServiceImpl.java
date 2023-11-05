@@ -44,7 +44,7 @@ public class EmployeeEmailServiceImpl implements EmployeeEmailService {
 
         employee.getEmails().forEach(d -> d.setEmployee(employee));
 
-        employee.getEmails().forEach(e-> e.getEmailAddress().forEach( s -> s.setEmail(e) )   );
+        employee.getEmails().forEach(e-> e.getEmailAddress().forEach( s -> s.setEmail(e) ) );
 
        return employeeRepository.save(employee);
     }

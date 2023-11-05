@@ -20,7 +20,22 @@ springRestJWT:
     jwtSecret: SpringRestSecretKey
     jwtExpirationMs: 86400000
 
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
 
+# comment this due to this project using auto generated RSA public key and private key using Jwks and KeyGeneratorUtils class
+# only uncomment this when want to use manual generate public and private ley
+#rsa:
+#  public-key: classpath:certs/public.pem
+#  private-key: classpath:certs/private.pem
 #debug: true
 ---
 # yaml format xxx: xxxx
