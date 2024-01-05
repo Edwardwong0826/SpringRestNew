@@ -20,7 +20,7 @@ public class ConfigurationLocationRepositoryImpl extends ExtendedRepositoryImpl<
     }
 
     @Override
-    public Page<ConfigurationLocationDTO> getLoctaion(String status, Pageable pageable) {
+    public Page<ConfigurationLocationDTO> getLocation(String status, Pageable pageable) {
 
         StringBuilder sql = new StringBuilder("select LOC_ID,LOC_ART,LOC_TITLE,LOC_DESCR,LOC_DECK,LOC_FILENAME,LOC_STATUS,LOC_OVERLAP,LOC_COMMENT\r\n" +
                 ",typ_dek.typ_comment\r\n" +

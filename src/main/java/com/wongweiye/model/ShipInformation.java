@@ -24,7 +24,6 @@ public class ShipInformation {
     private long shipID;
 
     @Column(name="XCET_FC_ID")
-
     private String shipReferenceID;
 
     @Column(name = "XCET_RECORD_ID")
@@ -34,11 +33,9 @@ public class ShipInformation {
     private boolean shipEnabled;
 
     @Column(name = "XCET_CODE")
-
     private String shipCode;
 
     @Column(name = "XCET_NAME")
-
     private String shipName;
 
     @Column(name = "XCET_TYPE")

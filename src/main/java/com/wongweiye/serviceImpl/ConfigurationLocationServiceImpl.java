@@ -20,7 +20,7 @@ public class ConfigurationLocationServiceImpl implements ConfigurationLocationSe
 
         Page<ConfigurationLocationDTO> locationResult;
         Pageable pageable = PageRequest.of(offset, limit);
-        locationResult = configurationLocationRepository.getLoctaion(status,pageable);
+        locationResult = configurationLocationRepository.getLocation(status,pageable);
 
         return locationResult;
     }
