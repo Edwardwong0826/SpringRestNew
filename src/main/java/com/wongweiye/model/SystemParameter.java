@@ -40,11 +40,9 @@ public class SystemParameter {
     private String rowId;
 
     @Column(name = "PAR_GROUP")
-
     private String parGroup;
 
     @Column(name = "PAR_NAME")
-
     private String parName;
 
     @JsonIgnore
@@ -53,16 +51,13 @@ public class SystemParameter {
 
     @JsonIgnore
     @Column(name = "PAR_VERSION")
-
     private String parVersion;
 
     @JsonIgnore
     @Column(name = "PAR_ACCESS")
-
     private int parAccess;
 
     @Column(name = "PAR_VALUE")
-
     private String parValue;
 
 

@@ -5,6 +5,9 @@ import com.wongweiye.model.Email;
 import com.wongweiye.model.Employee;
 import com.wongweiye.service.EmployeeEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -110,6 +113,23 @@ public class EmployeeEmailController {
     public ResponseEntity<List<Email>> checkEmployeeByEmailIdAndType(@RequestParam long emailId , @RequestParam String emailType){
         List<Email> emails = employeeEmailService.checkEmailWithIdAndType(emailId, emailType);
         return ResponseEntity.ok().body(emails);
+    }
+
+    @GetMapping(path="/search/employee")
+    public ResponseEntity<List<Employee>> searchEmployeeName(@RequestParam String employeeName, @RequestParam long id){
+        Pageable page = PageRequest.of(0,10);
+        Page<Employee> employees = employeeEmailService.searchEmployee(employeeName, id, page);
+
+        return ResponseEntity.ok().body(employees.toList());
+    }
+
+    @GetMapping(path="/search/employeeWithEmail")
+    public ResponseEntity<List<Employee>> searchEmployeeWithEmailType(@RequestParam String employeeName, @RequestParam String emailType){
+
+        Pageable page = PageRequest.of(0,10);
+        Page<Employee> employees = employeeEmailService.searchEmployeeWithEmailType(employeeName, emailType, page);
+
+        return ResponseEntity.ok().body(employees.toList());
     }
 
 }

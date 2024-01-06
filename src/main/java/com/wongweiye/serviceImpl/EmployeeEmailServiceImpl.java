@@ -7,10 +7,15 @@ import com.wongweiye.repository.AddressRepository;
 import com.wongweiye.repository.EmailRepository;
 import com.wongweiye.repository.EmployeeRepository;
 import com.wongweiye.service.EmployeeEmailService;
+import com.wongweiye.specification.EmployeeSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -69,6 +74,20 @@ public class EmployeeEmailServiceImpl implements EmployeeEmailService {
     }
 
     @Override
+    public Page<Employee> searchEmployee(String name, long id, Pageable pageable){
+
+        Specification<Employee> spec = Specification.where(null);
+
+        if (Objects.nonNull(name)) {
+            spec = spec.and(EmployeeSpecification.hasNameLike(name)).and(EmployeeSpecification.idGreaterThan(id));
+        }
+
+        return employeeRepository.findAll(spec, pageable);
+
+    }
+
+
+    @Override
     public Optional<Address> updateAddress(long addressId, long employeeId, Address address) {
 
         return addressRepository.findById(addressId).map( addr ->{
@@ -109,6 +128,17 @@ public class EmployeeEmailServiceImpl implements EmployeeEmailService {
     public List<Email> checkEmailWithIdAndType(long id, String type) {
         List<Email> emailByIdAndType = employeeRepository.getEmailByIdAndType(id, type);
         return emailByIdAndType;
+    }
+
+    @Override
+    public Page<Employee> searchEmployeeWithEmailType(String name, String type, Pageable pageable){
+        Specification<Employee> spec = Specification.where(null);
+
+        spec = spec.and(EmployeeSpecification.hasNameLike(name)).and(EmployeeSpecification.hasEmailWithType(type));
+
+        Page<Employee> employeePage = employeeRepository.findAll(spec, pageable);
+
+        return employeePage;
     }
 
 
