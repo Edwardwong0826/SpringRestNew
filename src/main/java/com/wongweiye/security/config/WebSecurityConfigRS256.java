@@ -11,6 +11,7 @@ import com.wongweiye.security.Jwks;
 //import com.wongweiye.security.RSAKeyProperties;
 import com.wongweiye.security.config.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +35,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 
 // For Spring Boot 2.7, WebSecurityConfigurerAdapter is deprecated. Below code is for Spring Boot 2.7 >= above.
 // For Spring Boot 3 project, please refer to https://www.bezkoder.com/websecurityconfigureradapter-deprecated-spring-boot/
@@ -188,6 +190,12 @@ public class WebSecurityConfigRS256 {
         JwtAuthenticationConverter authConverter = new JwtAuthenticationConverter();
         authConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         return authConverter;
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        // Do any additional configuration here
+        return builder.build();
     }
 
     @Bean

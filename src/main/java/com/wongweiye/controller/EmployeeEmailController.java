@@ -70,6 +70,8 @@ public class EmployeeEmailController {
         }
     }
 
+    // @RequestBody can only use for POST/PUT not Get
+    // else will not able to get json data value
     @PutMapping(path = "/update/email/{emailId}/address/{addressID}", consumes = "application/json" )
     public ResponseEntity<Email> updateEmailAndAddress(@PathVariable long addressID, @PathVariable long emailId, @RequestBody Email email) {
 
