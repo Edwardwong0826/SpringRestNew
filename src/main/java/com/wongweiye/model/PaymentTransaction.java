@@ -1,5 +1,7 @@
 package com.wongweiye.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -11,7 +13,7 @@ public class PaymentTransaction {
     @Column(name = "Id")
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "paymentid")
     private Payment payment;
 

@@ -1,5 +1,6 @@
 package com.wongweiye.serviceImpl;
 
+import com.wongweiye.dto.PaymentAndPaymentTransactionDTO;
 import com.wongweiye.model.PaymentAndPaymentTransaction;
 import com.wongweiye.model.PaymentTransactionAndFund;
 import com.wongweiye.repository.PaymentRepository;
@@ -25,6 +26,14 @@ public class PaymentServiceImpl {
     public List<PaymentAndPaymentTransaction> getPaymentAndPaymentTransaction(long paymentId){
 
         List<PaymentAndPaymentTransaction> list = paymentRepository.GetPaymentAndPaymentTransaction(paymentId);
+
+        return list;
+
+    }
+
+    public List<PaymentAndPaymentTransactionDTO> getPaymentAndPaymentTransaction2(long paymentId){
+
+        List<PaymentAndPaymentTransactionDTO> list = paymentRepository.findPaymentAndPaymentTransactionByDTO(paymentId);
 
         return list;
 
