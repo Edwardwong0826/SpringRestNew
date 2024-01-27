@@ -1,5 +1,6 @@
 package com.wongweiye.dto;
 
+import com.wongweiye.model.Fund;
 import com.wongweiye.model.Payment;
 import com.wongweiye.model.PaymentTransaction;
 import lombok.*;
@@ -9,9 +10,8 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentAndPaymentTransactionDTO {
+public class PaymentAndFundDTO {
 
     Payment payment;
-    PaymentTransaction paymentTransaction;
-
+    Fund fund;
 }

@@ -22,7 +22,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     // Projection by interface
     // the join on clause only work in native query, as native query is just the sql query return by Hibernate
-    @Query(value = "Select p.id, f.fund from paymenttransaction p join fund f on p.paymentid = f.transactionpaymentid " +
+    @Query(value = "Select p.id, f.fund from paymenttransaction p join fund f on p.paymentid = f.paymentId " +
             "where p.channelid = :channelId ", nativeQuery = true)
     List<PaymentTransactionAndFund> findByPaymentAndPaymentTransactionFund(@Param("channelId") Long channelId);
 

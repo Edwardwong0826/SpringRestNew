@@ -14,7 +14,8 @@ public class Fund {
     @Column(name = "fund")
     private int fund;
 
-    @Column(name = "transactionpaymentid")
-    private long transactionPaymentId;
+    // this one refer to payment id
+    @Column(name = "paymentId")
+    private long paymentId;
 
 }
