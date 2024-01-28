@@ -28,6 +28,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     // Projection by DTO
     // When using HQL / JPQL, join using on is not supported, unrelated entity join support via Hibernate > 5.1 version
+    // need to add @Getter @Setter @ToString on DTO class, else return response entity body will be empty even thought able to select data from repository
     @Query("Select new com.wongweiye.dto.PaymentAndPaymentTransactionDTO(p, pt) from PaymentTransaction pt join pt.payment p where p.id = :paymentId ")
     List<PaymentAndPaymentTransactionDTO> findPaymentAndPaymentTransactionByDTO(@Param("paymentId") Long paymentId);
 

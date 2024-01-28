@@ -60,11 +60,11 @@ public class PaymentController {
     public ResponseEntity<List<PaymentAndPaymentTransactionDTO>> getPaymentAndPaymentTransaction(@RequestParam("paymentId") long paymentId){
 
 
-        List<PaymentAndPaymentTransactionDTO> paymentAndFund = paymentServiceImpl.getPaymentAndPaymentTransaction2(paymentId);
+        List<PaymentAndPaymentTransactionDTO> paymentAndPaymentTransaction = paymentServiceImpl.getPaymentAndPaymentTransaction2(paymentId);
 
-        if(paymentAndFund != null)
+        if(paymentAndPaymentTransaction != null)
         {
-            return ResponseEntity.ok().body(paymentAndFund);
+            return ResponseEntity.ok(paymentAndPaymentTransaction);
 
         }
         else

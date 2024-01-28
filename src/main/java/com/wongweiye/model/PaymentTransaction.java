@@ -1,9 +1,14 @@
 package com.wongweiye.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "paymenttransaction")
 public class PaymentTransaction {
