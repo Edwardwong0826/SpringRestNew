@@ -21,7 +21,7 @@ public class OnBoardStatusController {
     @GetMapping("/onboardStatusAfterCheckIn")
     public ResponseEntity<SystemParameterIntDTO> getOnBoardStatus() {
 
-        SystemParameterIntDTO result= onBoardStatusSerivce.findOnBoardStatus(ParameterConstant.PAR_GENERAL,ParameterConstant.PAR_CHECK_IN_STATUS);
+        SystemParameterIntDTO result = onBoardStatusSerivce.findOnBoardStatus(ParameterConstant.PAR_GENERAL,ParameterConstant.PAR_CHECK_IN_STATUS);
 
         if(result != null) {
             return ResponseEntity.ok().body(result);
